@@ -2,99 +2,126 @@
 # Author: Al Shain
 setwd("~/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch")
 
-# The user-interface definition of the Shiny web app.
+# This is the user-interface definition of the Framingham Risk Score Calculator.
+# It calculates the Framingham Risk Score with updated scoring from WHO,
+# new values include Race or Ethnicity plus prior family/self history of CVHD.
+# The Framingham heart score is a a sex-specific algorithm used 
+# to estimate the 10-year cardiovascular risk of an individual.
+# 
+#-------------------------------------------------------------------------------------------------
 library(shiny)
-library(BH)
-library(rCharts)
-require(markdown)
-require(data.table)
-library(dplyr)
-library(DT)
-
+library(png)
+#-------------------------------------------------------------------------------------------------
 shinyUI(
-  navbarPage("LEGO Set Visualizer", 
-             # multi-page user-interface that includes a navigation bar.
-             tabPanel("Explore the Data",
-                      sidebarPanel(
-                        sliderInput("timeline", 
-                                    "Timeline:", 
-                                    min = 1950,
-                                    max = 2015,
-                                    value = c(1996, 2015)),
-                        sliderInput("pieces", 
-                                    "Number of Pieces:",
-                                    min = -1,
-                                    max = 5922,
-                                    value = c(271, 2448) 
-                        ),
-                        #format = "####"),
-                        uiOutput("themesControl"), # the id
-                        actionButton(inputId = "clearAll", 
-                                     label = "Clear selection", 
-                                     icon = icon("square-o")),
-                        actionButton(inputId = "selectAll", 
-                                     label = "Select all", 
-                                     icon = icon("check-square-o"))
-                        
-                      ),
-                      mainPanel(
-                        tabsetPanel(
-                          # Data 
-                          tabPanel(p(icon("table"), "Dataset"),
-                                   dataTableOutput(outputId="dTable")
-                          ), # end of "Dataset" tab panel
-                          tabPanel(p(icon("line-chart"), "Visualize the Data"),
-                                   h4('Number of Sets by Year', align = "center"),
-                                   h5('Please hover over each point to see the Year and Total Number of Sets.', 
-                                      align ="center"),
-                                   showOutput("setsByYear", "nvd3"),
-                                   h4('Number of Themes by Year', align = "center"),
-                                   h5('Please hover over each bar to see the Year and Total Number of Themes.', 
-                                      align ="center"),
-                                   showOutput("themesByYear", "nvd3"),
-                                   h4('Number of Pieces by Year', align = "center"),
-                                   h5('Please hover over each point to see the Set Name, ID and Theme.', 
-                                      align ="center"),
-                                   showOutput("piecesByYear", "nvd3"),
-                                   h4('Number of Average Pieces by Year', align = "center"),
-                                   showOutput("piecesByYearAvg", "nvd3"),
-                                   h4('Number of Average Pieces by Theme', align = "center"),
-                                   showOutput("piecesByThemeAvg", "nvd3")
-                          ) # end of "Visualize the Data" tab panel
-                          
-                        )
-                        
-                      )     
-             ), # end of "Explore Dataset" tab panel
-             
-             tabPanel(p(icon("search"), "LookUp on Brickset Website"),
-                      mainPanel(
-                        h4("The page popped-up is the LEGO set database on Brickset.com."),
-                        h4("Step 1. Please type the Set ID below and press the 'Go!' button:"),
-                        textInput(inputId="setid", label = "Input Set ID"),
-                        #p('Output Set ID:'),
-                        #textOutput('setid'),
-                        actionButton("goButtonAdd", "Go!"),
-                        h5('Output Address:'),
-                        textOutput("address"),
-                        p(""),
-                        h4("Step 2. Please click the button below. 
-                    The link to the Set's page is being generated."),
-                        p(""),
-                        actionButton("goButtonDirect", "Generate Link Below!"),
-                        p(""),
-                        htmlOutput("inc"),
-                        p("I was supposed to show you in an iframe below. However, it only
-                   worked on localhost and has security issue after deployed to the cloud. Ooops...")
-                        
-                      )         
-             ),
-             
-             tabPanel("About",
-                      mainPanel(
-                        includeMarkdown("about.md")
-                      )
-             ) # end of "About" tab panel
+  fluidPage(theme = "bootstrap.css",
+            
+  pageWithSidebar(
+    
+    headerPanel('Framingham Risk Score Calculator with Race & Prior CVHD'),
+    
+    sidebarPanel(
+      
+      h4('Please select the following information:'),
+      br(),
+      h4('Information about you:'),
+      radioButtons('SexRadioGroup', 'Gender:', 
+                   choices = list(
+                     'Male',
+                     'Female'
+                   ), selected = 'Female'),
+      selectInput('RaceSelect','Ethnicity or Race:',
+                  choices = list(
+                    'Caucasian' = 1,
+                    'Hispanic' = 2,
+                    'Black' = 3,
+                    'Asian' = 0 ), selected = 1),
+      radioButtons('PriorRadioGroup', 'Have you ever told the doctor that you or a parent have had a prior heart attack or stroke?',
+                  choices = list(
+                    'Yes',
+                    'No'), selected = 'No', T),
+      selectInput('AgeSelect', 'Age:', 
+                  choices = list(
+                    '20–34 years' = 1,
+                    '35–39 years' = 2,
+                    '40–44 years' = 3,
+                    '45–49 years' = 4,
+                    '50–54 years' = 5,
+                    '55–59 years' = 6,
+                    '60–64 years' = 7,
+                    '65–69 years' = 8,
+                    '70–74 years' = 9,
+                    '75–79 years' = 10
+                  ), selected = 1),
+       selectInput('SmokeSelect', 'Smoking status:',
+                  choices = list(
+                    'Smoker' = 1,
+                    'Non-smoker' = 2
+                  ), selected = 1),
+      br(),
+      h4('Clinical information about you:'),
+      p('Your systolic blood pressure:'),
+      radioButtons('SBPRadioGroup', 'Treated',
+                   choices = list('Yes', 'No'), selected = 'Yes', T),
+      selectInput('SBPSelect', 'Value, mm Hg',
+                  choices = list(
+                    'Under 120' = 1,
+                    '120-129' = 2,
+                    '130-139' = 3,
+                    '140-159' = 4,
+                    '160 or higher' = 5
+                  ), selected = 2
+      ),
+      br(),
+      h4('Lab results on your chloseterol levels:'),
+      selectInput('TotCholSelect', 'Total cholesterol, mg/dL',
+                  choices = list(
+                    'Under 160' = 1,
+                    '160-199' = 2,
+                    '200-239' = 3,
+                    '240-279' = 4,
+                    '280 or higher' = 5
+                  ), selected = 2),
+      selectInput('HDLCholSelect', 'HDL cholesterol, mg/dL',
+                  choices = list(
+                    '60 or higher' = 1,
+                    '50-59' = 2,
+                    '40-49' = 3,
+                    'Under 40' = 4
+                  ), selected = 2),
+      actionButton('RiskButton', 'Calculate risk')
+    ), # sidebarPanel
+    
+    mainPanel(
+      
+      p('The predictors for cardiovascular heart disease was measured by a study, referred to as the Framingham Heart Study.'),
+      p('The analysis of this study led to the development of the Framingham Risk Score, which represents your chances/risk'),
+      p('of suffering from a cardiovascular event-disease within the next 10 years.'),
+      p('In 2010 the World Health Orginization or WHO recommended adding more factors to the score, they included:'),
+      p('Race or Ethnicity and'),
+      p('Prior CVHD event where you either had a heart attack or stroke, or were informed by your physician that you'),
+      p('or your parents suffered from CVHD.'),
+      br(),
+      p('The additional factors (referred to as WHOish) were added to the original algorithm used to estimate the 10-year'),
+      p('cardiovascular risk of an individual or a score that reflects your chances of developing cardiovascular disease .'),
+      p('The WHO variables increase the risk factor by adding to the score based upon your response.'),
+      p('For some individuals with a low risk score is less than 20% CVHD risk at 10 years, with intermediate risk 20-30%,'),
+      p('and with those with a high risk are above 30%.'),
+      br(),
+      h3('Your Framingham Heart Score and 10-year Risk:'),
+      h4('Your Score is:'),
+      textOutput('PointsOutput'),
+      br(),
+      h4('Your 10-year risk of CVHD is:'),
+      textOutput('RiskOutput'),
+      br(),
+      h4('Graphs of expected Mortality rates as predicted by Framingham scores using WHO Ethnicity and Prior CVHD'),
+      imageOutput("preImage"),
+      br(),
+      br()
+      
+    ) # mainPanel
+    
+  ) # pageWithSidebar
   )
-  
-)
+) # shinyUI
+#-------------------------------------------------------------------------------------------------
