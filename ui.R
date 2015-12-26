@@ -1,6 +1,6 @@
 # Course Project: Shiny Application and Reproducible Pitch
 # Author: Al Shain
-setwd("~/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch")
+# setwd("~/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch")
 
 # This is the user-interface definition of the Framingham Risk Score Calculator.
 # It calculates the Framingham Risk Score with updated scoring from WHO,

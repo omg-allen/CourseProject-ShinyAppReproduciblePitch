@@ -1,6 +1,6 @@
 # Course Project: Shiny Application and Reproducible Pitch
 # Author: Al Shain
-setwd("~/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch")
+# setwd("~/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch")
 # This is the server logic for the Framingham Risk Score Calculator plus ethnicity and prior CVHD.
 # It calculates the Framingham Risk Score with updated scoring from WHO,
 # new values include Race or Ethnicity plus prior family/self history of CVHD.
