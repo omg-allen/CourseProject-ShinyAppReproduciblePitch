@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)file://localhost/Users/Al/mydeck/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Framingham Risk Score Calculator plus WHO-ish scoring</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Framingham Risk Score Calculator plus WHO-ish scoring">
+  <meta name="author" content="Al Shain">
+  <meta name="generator" content="slidify">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="./Framingham Risk Score Calculator plus WHO-ish scoring_files/default.css" media="all">
+  <link rel="stylesheet" href="./Framingham Risk Score Calculator plus WHO-ish scoring_files/phone.css" media="only screen and (max-device-width: 480px)">
+  <link rel="stylesheet" href="./Framingham Risk Score Calculator plus WHO-ish scoring_files/slidify.css">
+  <link rel="stylesheet" href="./Framingham Risk Score Calculator plus WHO-ish scoring_files/tomorrow.css">
+  <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="slides" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/slides.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="order" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/order.js"></script><script type="text/javascript" charset="utf-8" data-requirecontext="_" data-requiremodule="slide_config" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/slide_config.js"></script><script type="text/javascript" charset="utf-8" data-requirecontext="_" data-requiremodule="modernizr.custom.45394" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/modernizr.custom.45394.js"></script><script type="text/javascript" charset="utf-8" data-requirecontext="_" data-requiremodule="hammer" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/hammer.js"></script><script type="text/javascript" charset="utf-8" data-requirecontext="_" data-requiremodule="slide-controller" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/slide-controller.js"></script><script type="text/javascript" charset="utf-8" data-requirecontext="_" data-requiremodule="slide-deck" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/slide-deck.js"></script><!--<base target="_blank">--><base href="." target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel="stylesheet" href="./Framingham Risk Score Calculator plus WHO-ish scoring_files/ribbons.css">
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/require-1.0.8.min.js">
+  </script>
+  
+  
+
+<link rel="stylesheet" href="./Framingham Risk Score Calculator plus WHO-ish scoring_files/css"></head>
+<body style="opacity: 0" class="loaded">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground current">
+  <hgroup class="auto-fadein">
+    <h1>Framingham Risk Score Calculator plus WHO-ish scoring</h1>
+    <h2>Developing Data Projects, Course Project</h2>
+    <p>Al Shain<br>1</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="next" id="slide-1" style="background:;">
+  <hgroup>
+    <h1>Abstract</h1>
+  </hgroup>
+  <article data-timings="">
+    <p>The Framingham Heart Study is a long-term, ongoing cardiovascular study on residents of the town 
+of Framingham, Massachusetts. The study began in 1948 with 5,209 adult subjects from Framingham, 
+and is now on its third generation of participants. Prior to the study almost nothing was known 
+about the "epidemiology of hypertensive or arteriosclerotic cardiovascular disease" or more commonly
+know as Cardiovascular Heart Disease (CVHD). Much of the now-common knowledge concerning heart disease, 
+such as the effects of diet, exercise, and common medications such as aspirin, is based on this localized study.</p>
+
+<p>Cardiovascular Heart disease (CVHD) has historically been considered a disease of the developed
+nations, such as the Unitied States or England.  However, CVHD is rapidly becoming the largest 
+contributor to morbidity and mortality in growing "countries" where their economies have vastly
+improved. Evidence now supports a "global" view of patient care &amp; treatment for CVHD, with diverse
+race/ethnic groups providing more &amp; more detail. Furthermore, due to globally increasing mobility 
+large race/ethnic minority groups arise in developed countries. As a primary prevention of CVHD there is 
+a need to identify and treat high-risk individuals using risk prediction models.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class far-next" id="id" style="background:;">
+  <hgroup>
+    <h4>Slide 2</h4>
+  </hgroup>
+  <article data-timings="">
+    <h1>Methods</h1>
+
+<p>This shiny app extends the common variates found in the original Framingham Heart Study to include 
+two substantially important variables published by World Health Organization (WHO):</p>
+
+<ol>
+<li>Impacts attributed to Racial or Ethnicity</li>
+<li>Prior medical history of CVHD (either self or parent)
+The analysis of variables identified by the original Framingham Heart Study include:</li>
+</ol>
+
+<h4>Patient Information:</h4>
+
+<p>Sex (M/F), Age (19 &gt;) grouped in varying intervals, Smoker (Y/N)</p>
+
+<h4>Medical or Lab Results:</h4>
+
+<p>Systolic Blood Pressure (grouped in varying age intervals), Total Cholesterol (grouped in varying levels),
+HDL (grouped in varying levels), and Under going medical treatment (Y/N)</p>
+
+<h4>Who-ish Variables</h4>
+
+<p>Racial/Ethnicity (4 significant types) and
+Prior CVHD (Y/N)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:url(Framingham-WhoGraphs.png);">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h4>Slide 4</h4>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h3>Two column example</h3>
+  </hgroup>
+  <article data-timings="">
+    
+<div style="float:left;width:48%;" class="centered">
+  <p>First plot</p>
+
+<pre><code class="r">ggplot(diamonds, aes(carat, price))+geom_point(color=<span class="string">"cadetblue"</span>)
+</code></pre>
+
+<p><img src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2"> </p>
+
+</div>
+<div style="float:right;width:48%;">
+  <p>Second plot</p>
+
+<pre><code class="r">ggplot(diamonds, aes(carat, price, color=clarity))+geom_point()
+</code></pre>
+
+<p><img src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"> </p>
+
+<p></p>
+
+<p>publish(title = 'mytitle', 'index.html', host = 'rpubs')</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id="io2012-ptoc" style="display:none;">
+    <ul>
+      <li>
+      <a href="file://localhost/Users/Al/mydeck/index.html#" target="_self" rel="tooltip" data-slide="1" title="Abstract">
+         1
+      </a>
+    </li>
+    <li>
+      <a href="file://localhost/Users/Al/mydeck/index.html#" target="_self" rel="tooltip" data-slide="2" title="Slide 2">
+         2
+      </a>
+    </li>
+    <li>
+      <a href="file://localhost/Users/Al/mydeck/index.html#" target="_self" rel="tooltip" data-slide="3" title="NA">
+         3
+      </a>
+    </li>
+    <li>
+      <a href="file://localhost/Users/Al/mydeck/index.html#" target="_self" rel="tooltip" data-slide="4" title="Slide 4">
+         4
+      </a>
+    </li>
+    <li>
+      <a href="file://localhost/Users/Al/mydeck/index.html#" target="_self" rel="tooltip" data-slide="5" title="Two column example">
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="./Framingham Risk Score Calculator plus WHO-ish scoring_files/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </body></html>
