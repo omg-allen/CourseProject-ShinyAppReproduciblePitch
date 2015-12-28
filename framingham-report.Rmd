@@ -1,0 +1,159 @@
+---
+title: "Framingham Heart Study Visualization"
+author: "Al Shain"
+date: "December 25, 2015"
+output: html_document
+---
+```{r message = FALSE}
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(psych)
+setwd("~/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch")
+```
+
+## The Framingham Heart Study (FHS)
+* A long term study of Cardiovascular Disease among subjects in Framingham, USA.
+* It began in 1948 with 5209 subjects.
+* Patients have been examined every 2 years for
+    * Clinical examination data  
+    * Cardiovascular outcomes  
+* More information about the study can be found at the FHS
+  [official website](http://www.framinghamheartstudy.org/)
+  
+## Some Findings of the FHS
+* Over 1000 medical papers have been published using the data from the FHS.
+* The study has uncovered or confirmed several risk factors for Heart Disease:
+    * High blood pressure
+    * Obesity
+    * Cigarette smoking
+* The study has also shown there are differences in coronary risk between
+  men and women.
+    
+## The Framingham Dataset
+> - We have a subset of the original dataset, pertaining to 4434 patients.
+> - Each of these patients was followed for a total of 24 years, but we only have
+  data on their clinical examinations for a period of 12 years, spanning 1956 to 1968. 
+    * The data is provided in longitudinal form.
+    * Each participant has 1 to 3 observations.
+    * There are a total of 11627 rows in the data.
+
+## Columns in the Framingham Dataset
+Here are the *first six columns and rows* of the dataset:
+```{r echo=FALSE, label="load data"}
+fhs.long <- read.csv("/Users/Al/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch/data/frmgham2.csv")
+head(fhs.long[,1:6])
+```
+> - `RANDID` refers to the patient id.
+> - The remaining columns are measurements on the patients during their
+  examinations, and outcome measures. 
+
+## Measurements in Framingham Dataset
+Variable | Explanation
+---------|------------
+SEX    | 1 for males and 2 for females.   
+PERIOD | An integer between 1 and 3 denoting the examination number.  
+AGE    | Age at examination (in years).  
+SYSBP, DIABP |  Systolic and diastolic blood pressure.   
+
+## Measurements in Our Dataset | cont'd
+Variable | Explanation
+---------|------------
+CIGPDAY | Number of cigarettes smoked per day.   
+BMI | Body Mass Index.
+LDLC | Low density cholesterol.
+TOTCHOL | Total cholesterol.
+HYPERTEN | 1 if patient has hypertension, which is defined to be Systolic greater than 140mmHg or Diastolic greater than 90mmHg.
+
+## Outcome Measures in Our Dataset
+Variable | Explanation
+---------|------------
+STROKE | 1 if patient experienced a stroke during the 12 years and 0 otherwise.   
+ANYCHD | 1 if patient experienced a Coronary Heart Disease during the 12 years and 0 otherwise.   
+CVD    | 1 if patient experienced a Cerebrovascular Disease during the 12 years and 0 otherwise. 
+
+# Framingham Graphs
+#### We wish to know whether the mean heart rate of "healthy" people at exam 1 is equal to 70 beats per minute (bpm). 
+
+```{r, label="ex 4 soln"}
+fhs <- read.csv("/Users/Al/Desktop/Coursera/DevelopingDataProducts/CourseProject-ShinyAppReproduciblePitch/data/frmgham2.csv")
+colnames(fhs) <- toupper(colnames(fhs))
+with(fhs, summary(HEARTRTE))
+ggplot(fhs, aes(HEARTRTE)) +
+  geom_histogram(color = "black", fill = "white")
+#
+fhs.healthy <- filter(fhs, PERIOD == 1 & CURSMOKE == 0 & BMI < 25 & DIABP < 80 
+                      & SYSBP < 120 & DIABETES == 0)
+with(fhs.healthy, describe(HEARTRTE))
+ggplot(fhs.healthy, aes(x = HEARTRTE, y = ..density..)) + 
+  geom_histogram(color = "black", fill = "white") +
+  geom_density(fill = "green", alpha = 0.2)
+fhs.wide <- dcast(fhs, RANDID + SEX ~ PERIOD, value.var = "HEARTRTE")
+colnames(fhs.wide)[3:5] <- c("HEARTRTE1", "HEARTRTE2", "HEARTRTE3")
+tbl_df(fhs.wide)
+set.seed(12345)
+fhs.asample <- sample_n(fhs.wide, 200)
+ggplot(fhs.asample, aes(x = HEARTRTE1 - HEARTRTE2, y = ..density..)) + 
+  geom_histogram(color = "black", fill = "white") +
+  geom_density(fill = "red", alpha = 0.2)
+ggplot(fhs.wide, aes(HEARTRTE1, fill = as.factor(SEX))) + 
+  geom_density(alpha = 0.2)
+ggplot(filter(fhs, PERIOD == 1), aes(x = as.factor(EDUC), y = BMI)) + 
+  geom_boxplot() +
+  stat_summary(fun.y = "mean", geom = "point", shape = 4)
+```
+
+# Shiny Product
+## Input Panel 1
+```{r eval=FALSE, label="input panel 1"}
+inputPanel(
+  radioButtons("x_var", label="Explanatory Variable", 
+    choices=c("BMI", "LDLC", "TOTCHOL"), selected="BMI"),
+  
+  radioButtons("y_var", label="Response Variable", 
+    choices=c("CVD", "STROKE", "ANYCHD"), selected="CVD"),
+  
+  checkboxInput("con_gender", label="Condition on Gender", value=FALSE)
+)
+```
+
+# Shiny Product
+## Input Panel 2
+```{r eval=FALSE, label="input panel 2"}
+inputPanel(
+  sliderInput("bmi_range", label="BMI range", min=10,
+  max=60, value=c(10,60)),
+  sliderInput("ldlc_range", label="LDLC range", min=20,
+  max=565, value=c(20,565)),
+  sliderInput("tot_range", label="Total Chol. range", min=112,
+  max=625, value=c(112,625))
+)
+```
+ 
+## Output Panel
+```{r eval=FALSE, label="output panel 1"}
+  x <- fhs.only3[,input$x_var]
+  y <- fhs.only3[,input$y_var]
+  
+  if(input$x_var == "BMI") {
+    x.range <- input$bmi_range
+  } else if (input$x_var == "LDLC") {
+    x.range <- input$ldlc_range
+  } else 
+    x.range <- input$tot_range
+```
+
+## Output Panel
+```{r eval=FALSE, label="output panel 2"}
+  if(input$con_gender){
+    p <- qplot(x,y, xlab=input$x_var, ylab=input$y_var, facets = . ~ SEX, data=fhs.only3)
+  } else {
+    p <- qplot(x,y, xlab=input$x_var,ylab=input$y_var) 
+  } 
+  p + xlim(x.range) + stat_smooth(method="glm", family="binomial") + 
+  geom_point(position=position_jitter(height=0.02)) 
+```
+
+
+
+
